@@ -1,202 +1,69 @@
-# Neptune - Competitive Programming Platform
+# React + TypeScript + Vite
 
-Neptune is a web-based competitive programming platform that allows students to practice coding problems and teachers to create and manage programming exercises.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Features
+Currently, two official plugins are available:
 
-- User authentication (Student/Teacher roles)
-- Programming case management
-- Code submission and evaluation
-- Real-time feedback
-- Submission history
-- Profile management
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Tech Stack
+## Expanding the ESLint configuration
 
-### Backend
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-- Go
-- Gin web framework
-- GORM
-- PostgreSQL
-- JWT authentication
+```js
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-### Frontend
+      // Remove tseslint.configs.recommended and replace with this
+      ...tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      ...tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      ...tseslint.configs.stylisticTypeChecked,
 
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- DaisyUI
-- Monaco Editor
-
-## Getting Started
-
-### Prerequisites
-
-- Go 1.16 or later
-- Node.js 16 or later
-- PostgreSQL 13 or later
-
-### Backend Setup
-
-1. Navigate to the backend directory:
-
-   ```bash
-   cd backend
-   ```
-
-2. Install dependencies:
-
-   ```bash
-   go mod download
-   ```
-
-3. Create a `.env` file with the following variables:
-
-   ```
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_USER=postgres
-   DB_PASSWORD=your_password
-   DB_NAME=neptune
-   JWT_SECRET=your_jwt_secret
-   ```
-
-4. Run the database migrations:
-
-   ```bash
-   go run cmd/migrate/main.go
-   ```
-
-5. Start the server:
-   ```bash
-   go run cmd/server/main.go
-   ```
-
-The backend server will start on `http://localhost:8080`.
-
-### Frontend Setup
-
-1. Navigate to the frontend directory:
-
-   ```bash
-   cd frontend
-   ```
-
-2. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-The frontend development server will start on `http://localhost:5173`.
-
-## API Documentation
-
-### Authentication
-
-#### Login
-
-```
-POST /api/auth/login
-Content-Type: application/json
-
-{
-  "username": "string",
-  "password": "string"
-}
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-#### Register
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-POST /api/auth/register
-Content-Type: application/json
-
-{
-  "username": "string",
-  "email": "string",
-  "password": "string",
-  "role": "student" | "teacher"
-}
-```
-
-### Cases
-
-#### List Cases
-
-```
-GET /api/cases
-Authorization: Bearer <token>
-```
-
-#### Get Case
-
-```
-GET /api/cases/:id
-Authorization: Bearer <token>
-```
-
-#### Create Case (Teacher only)
-
-```
-POST /api/cases
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "title": "string",
-  "description": "string",
-  "header": "string",
-  "isPublic": boolean,
-  "classId": "string",
-  "testCases": [
-    {
-      "input": "string",
-      "output": "string",
-      "isHidden": boolean
-    }
-  ]
-}
-```
-
-### Submissions
-
-#### Submit Code
-
-```
-POST /api/submissions
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "caseId": number,
-  "code": "string",
-  "language": "C" | "Python"
-}
-```
-
-#### List Submissions
-
-```
-GET /api/submissions
-Authorization: Bearer <token>
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
